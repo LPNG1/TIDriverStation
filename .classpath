@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="jinput"/>
+	<classpathentry kind="src" path="jsonsimple"/>
+	<classpathentry kind="lib" path="jinput/library/jinput-2.0.9.jar" sourcepath="jinput/source/jinput-master.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/TIDriverStation/jinput/javadoc/coreapi-2.0.9-javadoc.jar!/"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="TIDriverStation/jinput/natives"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jsonsimple/library/json-simple-1.1.1.jar" sourcepath="jsonsimple/sources/json-simple-1.1.1-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
