@@ -6,7 +6,7 @@ public class MotorData {
 	
 	private String port;
 	private String type;
-	private double encoderValue;
+	private long encoderValue;
 	
 	/**
 	 * Constructor for motor data structure
@@ -14,7 +14,7 @@ public class MotorData {
 	public MotorData(JSONObject motor) {
 		this.port = (String) motor.get("port");
 		this.type = (String) motor.get("type");
-		this.encoderValue = (double) motor.get("encoder-value");
+		this.encoderValue = (long) motor.get("encoder-value");
 	}
 	
 	public String getPort() {
@@ -25,7 +25,7 @@ public class MotorData {
 		return this.type;
 	}
 	
-	public double getEncoderValue() {
+	public long getEncoderValue() {
 		return this.encoderValue;
 	}
 	

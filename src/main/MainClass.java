@@ -16,21 +16,27 @@ public class MainClass {
 	 */
 	
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) {	
 		
 		Controller remote = JoystickManager.getNextController(Controller.Type.GAMEPAD);
-		Communicator.init("10.0.1.1", 4590);
+		Communicator.init("10.0.0.3", 4590);
+		System.out.println("comm init");
 		
 		while(!Communicator.hasNextMessage());
 		
 		ReaderThread read = new ReaderThread();
 		read.start();
 		
+		while(!read.isActive());
+		
 		while(read.isActive()) {
+			try {
 			System.out.println(read.getSensorData()[1].getValue());
+			} catch (NullPointerException e) {
+				System.out.println("null");
+			}
 		}
-			
+		
 			
 //			JSONArray msg = Communicator.getNextMessage();
 //			JSONObject sensorContainer = (JSONObject) msg.get(0);

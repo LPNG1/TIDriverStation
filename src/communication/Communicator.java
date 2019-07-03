@@ -92,11 +92,13 @@ public class Communicator {
 	 * @return
 	 */
 	public static JSONArray getNextMessage() {
-		try {
-			return (JSONArray) parser.parse(reader.nextLine());
-		} catch (ParseException e) {
-			System.out.println("Invalid message!");
-			e.printStackTrace();
+		if(reader.hasNextLine()) {
+			try {
+				return (JSONArray) parser.parse(reader.nextLine());
+			} catch (ParseException e) {
+				System.out.println("Invalid message!");
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
