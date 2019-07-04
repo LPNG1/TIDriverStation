@@ -1,12 +1,17 @@
 package main;
 
+import org.json.simple.JSONArray;
+
 import communication.Communicator;
-import communication.ReaderThread;
+import communication.tcp.TCPCommunicator;
+import communication.udp.UDPCommunicator;
+import communication.udp.UDPReaderThread;
+import communication.udp.UDPSenderThread;
+import data.JSONCreator;
 import input.JoystickManager;
 import net.java.games.input.Controller;
 
 public class MainClass {
-
 	
 	/*
 	 * logic:
@@ -15,38 +20,26 @@ public class MainClass {
 	 * sends commands when they are clicked on.
 	 */
 	
-	
 	public static void main(String[] args) {	
 		
 		Controller remote = JoystickManager.getNextController(Controller.Type.GAMEPAD);
-		Communicator.init("10.0.0.3", 4590);
+		Communicator.initCommuniction("10.0.0.3");
 		System.out.println("comm init");
 		
-		while(!Communicator.hasNextMessage());
-		
-		ReaderThread read = new ReaderThread();
+		UDPReaderThread read = new UDPReaderThread();
 		read.start();
 		
-		while(!read.isActive());
+		UDPSenderThread send = new UDPSenderThread(remote, 50);
+		send.start();
 		
-		while(read.isActive()) {
+		while(true) {
+		
 			try {
-			System.out.println(read.getSensorData()[1].getValue());
+				System.out.println(read.getBatteryData().getMotorCurrent());
 			} catch (NullPointerException e) {
 				System.out.println("null");
 			}
 		}
-		
-			
-//			JSONArray msg = Communicator.getNextMessage();
-//			JSONObject sensorContainer = (JSONObject) msg.get(0);
-//			JSONArray sensorArray = (JSONArray) sensorContainer.get("sensors");
-//			JSONObject touch = (JSONObject) sensorArray.get(1);
-//			
-//			System.out.println(touch.get("value"));
-			
-			
-		
 
 	}
 
