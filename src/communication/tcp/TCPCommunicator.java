@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -29,8 +30,10 @@ public class TCPCommunicator {
 	 * Connect to the robot and create components
 	 * @param ip robot's ip
 	 * @param port port to open connection on
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public static void init(String ip, int sendPort, int recPort) {
+	public static void init(String ip, int sendPort, int recPort) throws UnknownHostException, IOException {
 		connectToRobot(ip, sendPort, recPort);
 		createPrintStream();
 		createScanner();
@@ -42,16 +45,12 @@ public class TCPCommunicator {
 	 * @param ip
 	 * @param sendPort
 	 * @param recPort
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	private static void connectToRobot(String ip, int sendPort, int recPort) {
-		try {
+	private static void connectToRobot(String ip, int sendPort, int recPort) throws UnknownHostException, IOException {
 			TCPsendSocket = new Socket(ip, sendPort);
 			TCPrecSocket = new Socket(ip, recPort);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -90,7 +89,7 @@ public class TCPCommunicator {
 	 * Sends a JSON message to the robot via the printstream
 	 * @param msg
 	 */
-	public static void sendMessage(JSONArray msg) {
+	public static void sendMessage(JSONObject msg) {
 		ps.println(msg);
 	}
 	
@@ -98,10 +97,10 @@ public class TCPCommunicator {
 	 * Returns the next message in the queue
 	 * @return
 	 */
-	public static JSONArray getNextMessage() {
+	public static JSONObject getNextMessage() {
 		if(reader.hasNextLine()) {
 			try {
-				return (JSONArray) parser.parse(reader.nextLine());
+				return (JSONObject) parser.parse(reader.nextLine());
 			} catch (ParseException e) {
 				System.out.println("Invalid message!");
 				e.printStackTrace();
@@ -124,6 +123,10 @@ public class TCPCommunicator {
 	 */
 	public static InetAddress getIP() {
 		return TCPsendSocket.getInetAddress();
+	}
+	
+	public static boolean isConnected() {
+		return TCPsendSocket.isConnected();
 	}
 	
 }
