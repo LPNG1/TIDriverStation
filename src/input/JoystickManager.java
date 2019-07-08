@@ -10,33 +10,40 @@ import net.java.games.input.ControllerEnvironment;
  *
  */
 public class JoystickManager {
+	
+	private static Controller joystick;
 
 	/**
 	 * Gets the first available controller of a certain type.
 	 * @param type controller type to search for
 	 * @return first matching controller found, or null if none are found
 	 */
-	public static Controller getNextController(Controller.Type type) {
+	public static void findController(Controller.Type type) {
 		
 		Controller[] allControllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		
 		for (int i = 0; i < allControllers.length; i++) {
 			if (allControllers[i].getType() == type) {
 				System.out.println("Found: " + allControllers[i].getName());
-				return allControllers[i];
+				joystick =  allControllers[i];
 			}
 		}
 		
-		return null;
+		System.out.println("No controller found!");
 	}
 	
 	/**
 	 * Prints all component names and identifiers of a certain controller
 	 * @param c controller to scan
 	 */
-	public static void printComponents(Controller c) {
+	public static void printComponents() {
 		
-		Component[] cps = c.getComponents();
+		if(joystick == null) {
+			System.out.println("No joystick found!");
+			return;
+		}
+		
+		Component[] cps = joystick.getComponents();
 		System.out.println("Total Components: " + cps.length);
         
         for (int i = 0; i < cps.length; i++) {
@@ -56,12 +63,17 @@ public class JoystickManager {
 	 * Reads all component values of a certain controller
 	 * @return array of [id,value] pairs
 	 */
-	public static ComponentData[] getComponentValues(Controller c){
+	public static ComponentData[] getComponentValues(){
 		
-		Component[] cps = c.getComponents();
+		if(joystick == null) {
+			System.out.println("No joystick found!");
+			return null;
+		}
+		
+		Component[] cps = joystick.getComponents();
 		ComponentData[] cData = new ComponentData[cps.length];
 		
-		c.poll();
+		joystick.poll();
 		
 		for (int i = 0; i < cps.length; i++) {
 			String id = cps[i].getIdentifier().toString();
@@ -69,6 +81,17 @@ public class JoystickManager {
 			cData[i] = new ComponentData(id, value);
 		}
 		return cData;
+	}
+	
+	/**
+	 * Get controller
+	 * @return
+	 */
+	public static Controller getController() {
+		if(joystick == null) {
+			findController(Controller.Type.GAMEPAD);
+		}
+		return joystick;
 	}
 	
 }

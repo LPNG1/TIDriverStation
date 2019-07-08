@@ -17,9 +17,9 @@ public class JSONCreator {
 	/**
 	 * Returns a JSON object with current controller data
 	 */
-	public static JSONObject createJoystickJSON(Controller c) {
+	public static JSONObject createJoystickJSON() {
 		
-		ComponentData[] cData = JoystickManager.getComponentValues(c);
+		ComponentData[] cData = JoystickManager.getComponentValues();
 		
 		JSONObject joystickValues = new JSONObject();
 		
@@ -62,7 +62,7 @@ public class JSONCreator {
 		
 		JSONArray sendData = new JSONArray();
 		
-		sendData.add(createJoystickJSON(c));
+		sendData.add(createJoystickJSON());
 		sendData.add(createGamestateJSON(gamestate));
 		sendData.add(createStatusJSON(status));
 		

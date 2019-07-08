@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import communication.tcp.TCPCommunicator;
+import communication.udp.UDPCommunicator;
+import communication.udp.UDPReaderThread;
+import communication.udp.UDPSenderThread;
 import data.Constants;
 import gui.DriverStation;
 
@@ -41,6 +44,14 @@ public class BrickConnectAction implements ActionListener{
 			DriverStation.getInstance().allowBrickConnection(true);
 			return;
 		}
+		
+		UDPCommunicator.init();
+		
+		UDPSenderThread send = new UDPSenderThread(50);
+		UDPReaderThread read = new UDPReaderThread();
+		
+		send.start();
+		read.start();
 		
 		DriverStation.getInstance().allowRobotEnable(true);
 		DriverStation.getInstance().allowStartAuto(true);

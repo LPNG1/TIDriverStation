@@ -1,6 +1,8 @@
 package main;
 
 import gui.DriverStation;
+import input.JoystickManager;
+import net.java.games.input.Controller;
 
 public class MainClass {
 	
@@ -12,30 +14,8 @@ public class MainClass {
 	 */
 	
 	public static void main(String[] args) {	
-		
-//		Controller remote = JoystickManager.getNextController(Controller.Type.GAMEPAD);
-//		Communicator.initCommuniction("10.0.0.3");
-//		System.out.println("comm init");
-//		
-//		UDPReaderThread read = new UDPReaderThread();
-//		read.start();
-//		
-//		UDPSenderThread send = new UDPSenderThread(remote, 50);
-//		send.start();
-//		
-//		while(true) {
-//		
-//			try {
-//				System.out.println(read.getBatteryData().getMotorCurrent());
-//			} catch (NullPointerException e) {
-//				System.out.println("null");
-//			}
-//		}
-		
-		
-		
+		JoystickManager.findController(Controller.Type.GAMEPAD);
 		DriverStation.init();
-		
 	}
 
 }

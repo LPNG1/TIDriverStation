@@ -30,8 +30,10 @@ public class UDPReaderThread extends Thread {
 
 			// get next UDP message
 			JSONArray msg = null;
-			while (msg == null && !this.isInterrupted()) {
+			try{
 				msg = UDPCommunicator.getMessage();
+			} catch (NullPointerException e) {
+				continue;
 			}
 
 			// update battery data

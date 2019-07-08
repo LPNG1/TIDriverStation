@@ -2,8 +2,8 @@ package communication.udp;
 
 import org.json.simple.JSONArray;
 
-import communication.tcp.TCPCommunicator;
 import data.JSONCreator;
+import input.JoystickManager;
 import net.java.games.input.Controller;
 
 /**
@@ -27,8 +27,8 @@ public class UDPSenderThread extends Thread{
 	 * @param c controller to read joystick data from
 	 * @param interval
 	 */
-	public UDPSenderThread(Controller c, long interval) {
-		this.c = c;
+	public UDPSenderThread(long interval) {
+		this.c = JoystickManager.getController();
 		this.messageInterval = interval;
 	}
 	

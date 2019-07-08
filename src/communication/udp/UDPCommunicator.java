@@ -10,6 +10,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import communication.tcp.TCPCommunicator;
+
 /**
  * UDP Communication utiities
  * @author John
@@ -32,11 +34,11 @@ public class UDPCommunicator {
 	 * Initialize UDP connection
 	 * @param ip stored IP used for sending data later
 	 */
-	public static void init(InetAddress ip) {
+	public static void init() {
 		//TODO: make this changeable
 		sendPort = 4590;
 		recPort = 4591;
-		brickIP = ip;
+		brickIP = TCPCommunicator.getIP();
 		
 		try {
 			UDPSendSocket = new DatagramSocket();
@@ -65,20 +67,21 @@ public class UDPCommunicator {
 	 * Retreive a message from the UDP socket
 	 * @return
 	 */
-	public static JSONArray getMessage() {
+	public static  JSONArray getMessage() {
 		
 		//get a packet from the socket
 		byte[] buffer = new byte[bufferLength];
 		DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 		try {
 			UDPRecSocket.receive(packet);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		//parse the packet using JSON
 		String msg = new String(packet.getData());
-			//TODO: this but pretty and not hardcoded
+		
+		//TODO: this but pretty and not hardcoded
 		msg = msg.split("}}]")[0] + "}}]";
 		
 		JSONArray parsedMsg = null;
