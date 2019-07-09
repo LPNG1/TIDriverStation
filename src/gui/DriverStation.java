@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +20,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import communication.udp.UDPReaderThread;
+import communication.udp.UDPSenderThread;
 import data.BatteryData;
 import gui.actions.BrickConnectAction;
+import gui.actions.OpenSensorViewAction;
 import gui.actions.RobotDisableAction;
 import gui.actions.RobotEnableAction;
 import gui.actions.ServerConnectAction;
@@ -62,6 +67,9 @@ public class DriverStation extends JFrame{
 		private DSTextField numberInput, ipInput;
 		private JComboBox<String> teamList;
 		
+		private static UDPSenderThread sender;
+		private static UDPReaderThread reader;
+		
 		private static DriverStation instance;
 		
 	public static void init() {
@@ -90,6 +98,7 @@ public class DriverStation extends JFrame{
 		menuBar = new JMenuBar();
 		view = new JMenu("View");
 		sensors = new JMenuItem("Sensor Data");
+		sensors.addActionListener(new OpenSensorViewAction());
 		
 		view.add(sensors);
 		menuBar.add(view);
@@ -97,8 +106,8 @@ public class DriverStation extends JFrame{
 		
 		//create panel
 		p = new JPanel();
-		p.setBounds(0, 0, 900, 250);
-		p.setBackground(Color.GRAY);
+		p.setBounds(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+		p.setBackground(new Color(40, 40, 40));
 		p.setLayout(null);
 		add(p);
 		
@@ -224,7 +233,8 @@ public class DriverStation extends JFrame{
 		setVisible(true);
 	}
 	
-	public void setBatteryInfo(BatteryData b) {
+	public void setBatteryInfo() {
+		BatteryData b = reader.getBatteryData();
 		voltage.setText((new DecimalFormat("#.##").format(b.getVoltage())) + "V");
 		current.setText((new DecimalFormat("#.##").format(b.getCurrent())) + "A");
 	}
@@ -260,6 +270,16 @@ public class DriverStation extends JFrame{
 	
 	public void allowStopAuto(boolean state) {
 		stopAuto.setEnabled(state);
+	}
+	
+	public static void initSenderThread() {
+		sender = new UDPSenderThread(50);
+		sender.start();
+	}
+	
+	public static void initReaderThread() {
+		reader = new UDPReaderThread();
+		reader.start();
 	}
 	
 }

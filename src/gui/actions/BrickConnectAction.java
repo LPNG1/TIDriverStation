@@ -6,12 +6,13 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import javax.swing.JOptionPane;
+
 import communication.tcp.TCPCommunicator;
 import communication.udp.UDPCommunicator;
-import communication.udp.UDPReaderThread;
-import communication.udp.UDPSenderThread;
 import data.Constants;
 import gui.DriverStation;
+import gui.StationListener;
 
 /**
  * Connects to the named brick from the driver station
@@ -19,12 +20,12 @@ import gui.DriverStation;
  *
  */
 public class BrickConnectAction implements ActionListener{
-
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
 		//update info
-		System.out.println("Connecting to brick");
+		System.out.println("Connecting to robot");
 		DriverStation.getInstance().setConnectionStatus("Connecting", Color.YELLOW);
 		DriverStation.getInstance().allowBrickConnection(false);
 		
@@ -33,6 +34,7 @@ public class BrickConnectAction implements ActionListener{
 			TCPCommunicator.init(DriverStation.getInstance().getIP(), Constants.sendPort, Constants.recPort);
 		} catch (Exception e) {
 			//if cant connect - update info and return
+			JOptionPane.showMessageDialog(null, "Cant connect to the robot! \n Check your PAN is connected and IP is correct!");
 			if(e instanceof IOException) {
 				System.out.println("Can't connect to robot!");
 			} else if (e instanceof UnknownHostException) {
@@ -47,11 +49,11 @@ public class BrickConnectAction implements ActionListener{
 		
 		UDPCommunicator.init();
 		
-		UDPSenderThread send = new UDPSenderThread(50);
-		UDPReaderThread read = new UDPReaderThread();
+		DriverStation.initSenderThread();
+		DriverStation.initReaderThread();
 		
-		send.start();
-		read.start();
+		StationListener s = new StationListener();
+		s.start();
 		
 		DriverStation.getInstance().allowRobotEnable(true);
 		DriverStation.getInstance().allowStartAuto(true);

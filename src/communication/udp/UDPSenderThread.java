@@ -21,7 +21,8 @@ public class UDPSenderThread extends Thread{
 	//TODO: implement this from the server
 	private String gamestate = "teleop";
 	private String status = "enabled";
-
+	
+	
 	/**
 	 * Creates a new UDP sender thread
 	 * @param c controller to read joystick data from

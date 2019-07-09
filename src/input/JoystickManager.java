@@ -29,7 +29,9 @@ public class JoystickManager {
 			}
 		}
 		
-		System.out.println("No controller found!");
+		if(joystick == null) {
+			System.out.println("No controller found!");
+		}
 	}
 	
 	/**
@@ -89,6 +91,7 @@ public class JoystickManager {
 	 */
 	public static Controller getController() {
 		if(joystick == null) {
+			System.out.println("ERR - null controller! Locating...");
 			findController(Controller.Type.GAMEPAD);
 		}
 		return joystick;
