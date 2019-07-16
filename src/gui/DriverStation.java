@@ -3,8 +3,6 @@ package gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -23,13 +21,7 @@ import javax.swing.JPanel;
 import communication.udp.UDPReaderThread;
 import communication.udp.UDPSenderThread;
 import data.BatteryData;
-import gui.actions.BrickConnectAction;
-import gui.actions.OpenSensorViewAction;
-import gui.actions.RobotDisableAction;
-import gui.actions.RobotEnableAction;
-import gui.actions.ServerConnectAction;
-import gui.actions.StartAutoAction;
-import gui.actions.StopAutoAction;
+import gui.actions.*;
 
 /**
  * Driver station GUI Interface
@@ -62,7 +54,7 @@ public class DriverStation extends JFrame{
 		private JPanel p;
 		
 		//components
-		private DSButton startAuto, stopAuto, enable, disable, connectToServer, connect;
+		private DSButton testAuto, testTeleop, enable, disable, connectToServer, connect;
 		private DSLabel match, matchStatus, stage, matchStage, voltage, current, teamId, ip, status, number, connectionStatus;
 		private DSTextField numberInput, ipInput;
 		private JComboBox<String> teamList;
@@ -79,9 +71,6 @@ public class DriverStation extends JFrame{
 	}
 	
 	public static DriverStation getInstance() {
-		if (instance == null) {
-			init();
-		}
 		return instance;
 	}
 		
@@ -112,17 +101,17 @@ public class DriverStation extends JFrame{
 		add(p);
 		
 		//start and stop auto
-		startAuto = new DSButton("Start Auto", Color.GREEN);
-		startAuto.setBounds(TEST_COLUMN, 20, 150, 40);
-		startAuto.addActionListener(new StartAutoAction());
-		startAuto.setEnabled(false);
-		p.add(startAuto);
+		testAuto = new DSButton("Start Auto", Color.GREEN);
+		testAuto.setBounds(TEST_COLUMN, 20, 150, 40);
+		testAuto.addActionListener(new StartAutoAction());
+		testAuto.setEnabled(false);
+		p.add(testAuto);
 		
-		stopAuto = new DSButton("Stop Auto", Color.RED);
-		stopAuto.setBounds(TEST_COLUMN, 65, 150, 40);
-		stopAuto.addActionListener(new StopAutoAction());
-		stopAuto.setEnabled(false);
-		p.add(stopAuto);
+		testTeleop = new DSButton("Start Teleop", Color.GREEN);
+		testTeleop.setBounds(TEST_COLUMN, 65, 150, 40);
+		testTeleop.addActionListener(new StartTeleopAction());
+		testTeleop.setEnabled(false);
+		p.add(testTeleop);
 		
 		//enable and disable
 		enable = new DSButton("Enable", Color.GREEN);
@@ -264,12 +253,46 @@ public class DriverStation extends JFrame{
 		disable.setEnabled(state);
 	}
 	
-	public void allowStartAuto(boolean state) {
-		startAuto.setEnabled(state);
+	public void allowTestAuto(boolean state) {
+		testAuto.setEnabled(state);
 	}
 	
-	public void allowStopAuto(boolean state) {
-		stopAuto.setEnabled(state);
+	public void allowTestTeleop(boolean state) {
+		testTeleop.setEnabled(state);
+	}
+	
+	public void toggleAutoButton() {
+		//TODO detect in a better way than reading the text
+		if(testAuto.getText() == "Start Auto") {
+			testAuto.setText("Stop Auto");
+			testAuto.setForeground(Color.RED);
+			testAuto.removeActionListener(testAuto.getActionListeners()[0]);
+			testAuto.addActionListener(new StopAutoAction());
+		} else {
+			testAuto.setText("Start Auto");
+			testAuto.setForeground(Color.GREEN);
+			testAuto.removeActionListener(testAuto.getActionListeners()[0]);
+			testAuto.addActionListener(new StartAutoAction());
+		}
+	}
+	
+	public void toggleTeleopButton() {
+		//TODO detect in a better way than reading the text
+		if(testTeleop.getText() == "Start Teleop") {
+			testTeleop.setText("Stop Teleop");
+			testTeleop.setForeground(Color.RED);
+			testTeleop.removeActionListener(testTeleop.getActionListeners()[0]);
+			testTeleop.addActionListener(new StopTeleopAction());
+		} else {
+			testTeleop.setText("Start Teleop");
+			testTeleop.setForeground(Color.GREEN);
+			testTeleop.removeActionListener(testTeleop.getActionListeners()[0]);
+			testTeleop.addActionListener(new StartTeleopAction());
+		}
+	}
+
+	public String getAutoText() {
+		return testAuto.getText();
 	}
 	
 	public static void initSenderThread() {
@@ -280,6 +303,14 @@ public class DriverStation extends JFrame{
 	public static void initReaderThread() {
 		reader = new UDPReaderThread();
 		reader.start();
+	}
+	
+	public static UDPSenderThread getSender() {
+		return sender;
+	}
+	
+	public static UDPReaderThread getReader() {
+		return reader;
 	}
 	
 }

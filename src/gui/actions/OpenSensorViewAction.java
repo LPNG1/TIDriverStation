@@ -9,6 +9,7 @@ public class OpenSensorViewAction implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		System.out.println("opening sensor view");
 		SensorView.init();
 	}
 

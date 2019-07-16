@@ -110,11 +110,38 @@ public class TCPCommunicator {
 	}
 	
 	/**
+	 * Gets next event response from the robot
+	 * @return
+	 */
+	public static boolean getNextResponse() {
+		while(!hasNextMessage());
+		
+		try {
+			JSONObject msg = new JSONObject();
+			msg = (JSONObject) parser.parse(reader.nextLine());
+			String response = (String) msg.get("response");
+			
+			switch (response) {
+			case "success":
+				return true;
+			case "failure":
+				return false;
+			}
+			
+		} catch (ParseException e) {
+			System.out.println("Invalid message!");
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Determines whether there is a message in the queue
 	 * @return
 	 */
 	public static boolean hasNextMessage() {
-		return reader.hasNext();
+		return reader.hasNextLine();
 	}
 	
 	/**

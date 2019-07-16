@@ -56,8 +56,8 @@ public class BrickConnectAction implements ActionListener{
 		s.start();
 		
 		DriverStation.getInstance().allowRobotEnable(true);
-		DriverStation.getInstance().allowStartAuto(true);
-		DriverStation.getInstance().allowStopAuto(true);
+		DriverStation.getInstance().allowTestAuto(true);
+		DriverStation.getInstance().allowTestTeleop(true);
 		DriverStation.getInstance().setConnectionStatus("Connected", Color.GREEN);
 		
 	}

@@ -9,24 +9,24 @@ import communication.tcp.TCPCommunicator;
 import gui.DriverStation;
 
 /**
- * Sends a stop auto event to the robot
+ * Sends a stop teleop event to the robot
  * @author John
  *
  */
-public class StopAutoAction implements ActionListener{
+public class StopTeleopAction implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		JSONObject stopAutoEvent = new JSONObject();
-		stopAutoEvent.put("event-id", "stop-auto");
-		TCPCommunicator.sendMessage(stopAutoEvent);
+		
+		JSONObject stopTeleopEvent = new JSONObject();
+		stopTeleopEvent.put("event-id", "stop-teleop");
+		TCPCommunicator.sendMessage(stopTeleopEvent);
 		
 		if(TCPCommunicator.getNextResponse()) {
-			DriverStation.getInstance().toggleAutoButton();
+			DriverStation.getInstance().toggleTeleopButton();
 		} else {
 			System.out.println("Action failed!");
 		}
 	}
-	
+
 }

@@ -17,15 +17,15 @@ public class RobotEnableAction implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("robot enabled");
 		
 		JSONObject enableEvent = new JSONObject();
 		enableEvent.put("event-id", "enable");
 		TCPCommunicator.sendMessage(enableEvent);
 		
-		DriverStation.getInstance().allowRobotEnable(false);
-		DriverStation.getInstance().allowRobotDisable(true);
-		
+		if(TCPCommunicator.getNextResponse()) {
+			DriverStation.getInstance().allowRobotEnable(false);
+			DriverStation.getInstance().allowRobotDisable(true);
+		}
 	}
 	
 }
